@@ -1,6 +1,6 @@
 # Language
 
-A shell can be considered as a language for executing commands. This shell is an interactive shell, that is it parses user's command lines and executes the specified commands in a loop, known also as [REPL]((https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop)), that
+A shell can be considered as a language for executing commands. COMP0010 Shell is an interactive shell, that is it parses user's command lines and executes the specified commands in a loop, known also as [REPL]((https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop)), that
 
 1. prints a prompt message;
 2. parses user's command;
@@ -8,13 +8,15 @@ A shell can be considered as a language for executing commands. This shell is an
 4. prints the output;
 5. goes to step 1.
 
-In a shell, applications play a role similar to that of functions in programming languages like Java and Python. A command line application in UNIX can be considered as a black-box with two inputs ([command line arguments](https://en.wikipedia.org/wiki/Command-line_interface#Arguments) and [stdin](https://en.wikipedia.org/wiki/Standard_streams#Standard_input_(stdin))) and three outputs ([stdout](https://en.wikipedia.org/wiki/Standard_streams#Standard_output_(stdout)), [stderr](https://en.wikipedia.org/wiki/Standard_streams#Standard_error_(stderr)) and [exit code](https://en.wikipedia.org/wiki/Exit_status)). Command line arguments is a list of strings; stdin, stdout and stderr are sequences of bytes; exit code is a number. In this shell, exceptions are used instead of stderr and exit codes. 
+In a shell, applications play a role similar to that of functions in programming languages like Java and Python. A command line application in UNIX can be considered as a black-box with two inputs ([command line arguments](https://en.wikipedia.org/wiki/Command-line_interface#Arguments) and [stdin](https://en.wikipedia.org/wiki/Standard_streams#Standard_input_(stdin))) and three outputs ([stdout](https://en.wikipedia.org/wiki/Standard_streams#Standard_output_(stdout)), [stderr](https://en.wikipedia.org/wiki/Standard_streams#Standard_error_(stderr)) and [exit code](https://en.wikipedia.org/wiki/Exit_status)). Command line arguments is a list of strings; stdin, stdout and stderr are sequences of bytes; exit code is a number. In COMP0010 Shell, exceptions are used instead of stderr and exit codes. 
 
-In this document, the syntax of this shell is specified using [BNF](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form) notation.
+![Applications in UNIX and COMP0010 Shell](apps.svg)
+
+In this document, the syntax of COMP0010 Shell is specified using [BNF](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form) notation.
 
 ## Command Line Parsing
 
-A command may contain several subcommands. When this shell receives a command line, it
+A command may contain several subcommands. When COMP0010 Shell receives a command line, it
 
 1. parses the command line on the command level. It recognizes three kind of commands: call command, sequence command, and pipe command;
 2. evaluates the recognized commands in the proper order.
@@ -42,9 +44,9 @@ In this example, `echo` gets two command line arguments: `hello` and `world`. In
 
 In this case, `echo` receives `hello world` as a single argument.
 
-This shell supports three kinds of quotes: single quotes ```'```, double quotes ```"``` and backquotes ``` ` ```. The first and the second ones are used to disable interpretation of special characters, the last one is used to make command substitution.
+COMP0010 Shell supports three kinds of quotes: single quotes ```'```, double quotes ```"``` and backquotes ``` ` ```. The first and the second ones are used to disable interpretation of special characters, the last one is used to make command substitution.
 
-This shell uses the following grammar to parse quoted strings:
+COMP0010 Shell uses the following grammar to parse quoted strings:
 
     <quoted> ::= <single-quoted> | <double-quoted> | <backquoted>
     <single-quoted> ::= "'" <non-newline and non-single-quote> "'"
@@ -59,7 +61,7 @@ Note that the rule for double quotes is different from single quotes: double quo
 
 the outer `echo` receives one argument rather than two.
 
-Note that compared with e.g. Bash, this shell does not have character escaping.
+Note that compared with e.g. Bash, COMP0010 Shell does not have character escaping.
 
 ## Call Command
 
@@ -69,7 +71,7 @@ A call command executes an application with specified inputs. For example,
 
 finds all lines of the file `text1.txt` that contain the string `Interesting String` as a substring and saves them in the file `result.txt`.
 
-This shell uses the following grammar to parse call commands:
+COMP0010 Shell uses the following grammar to parse call commands:
 
     <call> ::= [ <whitespace> ] [ <redirection> <whitespace> ]* <argument> [ <whitespace> <atom> ]* [ <whitespace> ]
     <atom> ::= <redirection> | <argument>
@@ -87,7 +89,7 @@ A call command is evaluated in the following order:
 4. the application name is resolved (the first `<argument>` without a redirection operator is the application to be called);
 5.	the specified application is executed.
 
-Before executing an application, this shell interprets the [redirections](https://www.gnu.org/software/bash/manual/html_node/Redirections.html) commands in the following way:
+Before executing an application, COMP0010 Shell interprets the [redirections](https://www.gnu.org/software/bash/manual/html_node/Redirections.html) commands in the following way:
 
 1. opens the file following the `<` symbol for input redirection; 
 2. opens the file following the `>` symbol for output redirection;
@@ -95,7 +97,7 @@ Before executing an application, this shell interprets the [redirections](https:
 4. if the file specified for input redirection does not exist, throws an exception;
 5. if the file specified for output redirection does not exist, creates it.
 
-After that, the shell runs the specified application, supplying given command line arguments and redirection streams.
+After that, COMP0010 Shell runs the specified application, supplying given command line arguments and redirection streams.
 
 ## Sequence Command
 
@@ -136,7 +138,7 @@ concatenates all files in the directory `articles`.
 
 The symbol `*` (asterisk) in an unquoted part of an argument is interpreted as globbing.
 
-For each argument `ARG` that contains unquoted `*` (asterisk), this shell performs the following:
+For each argument `ARG` that contains unquoted `*` (asterisk), COMP0010 Shell performs the following:
 
 1. collects all paths to existing files and directories such that these paths can be obtained by replacing all the unquoted asterisk symbols in `ARG` by some (possibly empty) sequences of non-slash characters.
 2. if there are no such paths, leaves `ARG` unchanges.
